@@ -41,7 +41,7 @@ If a contact sent a new message in less than 2 hours interval, and there is no t
 
 ## Instalação: PASSO A PASSO
 - Roda git clone no repositorio
-
+- Crie os arquivos .env, so copiar os de exemplo e apagar os comentarios
 <br />
 
 - Dentro de /whaticket `docker-compose up -d --build` *Na primeiraz vez que rodar, vai demorar*
