@@ -39,6 +39,39 @@ If a contact sent a new message in less than 2 hours interval, and there is no t
 - Send media (images/audio/documents) ✅
 - Receive media (images/audio/video/documents) ✅
 
+## Instalação: PASSO A PASSO
+- Roda git clone no repositorio
+
+<br />
+
+- Dentro de /whaticket `docker-composer up -u --build`
+- Dentro de /frontend e roda `npm i`
+- Dentro de /backend e roda `npm i`
+
+<br />
+
+- Dentro de /backend `npm run build`
+
+<br />
+
+- Depois `docker exec -it whaticket-mysql-1 mysql -uroot -p`
+- Digitar a senha `strongpassword`
+- Criar um usuario `CREATE USER 'whaticket'@'192.168.240.1' IDENTIFIED BY 'strongpassword';`
+- Dar os privilegios `GRANT ALL PRIVILEGES ON *.* TO 'whaticket'@'192.168.240.1' WITH GRANT OPTION;`
+- `FLUSH PRIVILEGES;`
+- E depois pode dar um `exit`
+
+<br />
+
+- Dento de /backend rode `npx sequelize db:migrate` e `npx sequelize db:seed:all`
+
+- E ja pode acessar o www.localhost:3000/login
+
+** Caso nao funcione, o erro pode estar no numero '192.168.240.1'
+Entao, caso esteja com problemas tente, antes de dar o privilegio rodar dentro de /backend o
+`npx sequelize db:migrate` que ele vai dar o número correto
+Ai é só usar o número correto em todo o processo a partir da cricao do usuario. Tudo que esta "grifado" faz parte do código, até os ; (ponto e virgula)
+
 ## Installation and Usage (Linux Ubuntu - Development)
 
 Create Mysql Database using docker:
