@@ -58,7 +58,7 @@ If a contact sent a new message in less than 2 hours interval, and there is no t
 - Digitar a senha `strongpassword`
 - Criar um usuario `CREATE USER 'whaticket'@'192.168.240.1' IDENTIFIED BY 'strongpassword';`
 - Dar os privilegios `GRANT ALL PRIVILEGES ON *.* TO 'whaticket'@'192.168.240.1' WITH GRANT OPTION;`
-- `FLUSH PRIVILEGES;`
+- E depois `FLUSH PRIVILEGES;`
 - E depois pode dar um `exit`
 
 <br />
