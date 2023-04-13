@@ -44,7 +44,7 @@ If a contact sent a new message in less than 2 hours interval, and there is no t
 
 <br />
 
-- Dentro de /whaticket `docker-compose up -d --build`
+- Dentro de /whaticket `docker-compose up -d --build` *Na primeiraz vez que rodar, vai demorar*
 - Dentro de /frontend e roda `npm i`
 - Dentro de /backend e roda `npm i`
 
