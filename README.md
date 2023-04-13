@@ -69,7 +69,7 @@ If a contact sent a new message in less than 2 hours interval, and there is no t
 
 - E ja pode acessar o www.localhost:3000/login
 
-** Caso nao funcione, o erro pode estar no numero '192.168.240.1'
+** Caso nao funcione, o erro pode estar no numero '192.168.48.1'
 Entao, caso esteja com problemas tente, antes de dar o privilegio rodar dentro de /backend o
 `npx sequelize db:migrate` que ele vai dar o número correto
 Ai é só usar o número correto em todo o processo a partir da cricao do usuario. Tudo que esta "grifado" faz parte do código, até os ; (ponto e virgula)
