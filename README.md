@@ -54,10 +54,12 @@ If a contact sent a new message in less than 2 hours interval, and there is no t
 
 <br />
 
+- Dentro de  /backend rode `npx sequelize db:migrate`, vai dar erro, mas anote o numero que vem apos o @, exemplo '192.168.48.1'
+
 - Depois `docker exec -it whaticket-mysql-1 mysql -uroot -p`
 - Digitar a senha `strongpassword`
-- Criar um usuario `CREATE USER 'whaticket'@'192.168.240.1' IDENTIFIED BY 'strongpassword';`
-- Dar os privilegios `GRANT ALL PRIVILEGES ON *.* TO 'whaticket'@'192.168.240.1' WITH GRANT OPTION;`
+- Criar um usuario `CREATE USER 'whaticket'@'192.168.48.1' IDENTIFIED BY 'strongpassword';`
+- Dar os privilegios `GRANT ALL PRIVILEGES ON *.* TO 'whaticket'@'192.168.48.1' WITH GRANT OPTION;`
 - E depois `FLUSH PRIVILEGES;`
 - E depois pode dar um `exit`
 
