@@ -142,18 +142,26 @@ const verifyMessage = async (
   contact: Contact
 ) => {
   if (msg.type === "location") msg = prepareLocation(msg);
-
-  const a = JSON.parse(JSON.stringify(msg));
   const quotedMsg = await verifyQuotedMessage(msg);
+  const a = JSON.parse(JSON.stringify(msg));
+
+  let arr = [];
+  if (a._data.quotedMsg) {
+    if (a._data.quotedMsg.type === 'product') {
+      arr.push(`
+      Pergutando sobre o(a): ${a._data.quotedMsg.title}
+      Cliente: ${msg.body}
+      `);
+    }
+  }
+
   const messageData = {
     id: msg.id.id,
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
-    body: msg.body
-      ? a._data.body
-      : `Produto(s) do catálogo:
+    body: arr.length > 0 ? arr[0] : (msg.body ? a._data.body : `Produto(s) do catálogo:
       Quantidade: ${a._data.itemCount}
-      Valor: R$ ${(a._data.totalAmount1000 / 1000).toFixed(2)} ${a._data.totalCurrencyCode}`,
+      Valor: R$ ${(a._data.totalAmount1000 / 1000).toFixed(2)} ${a._data.totalCurrencyCode}`),
     fromMe: msg.fromMe,
     mediaType: msg.type,
     read: msg.fromMe,
