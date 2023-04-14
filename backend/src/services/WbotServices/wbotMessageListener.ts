@@ -82,6 +82,7 @@ const verifyMediaMessage = async (
   ticket: Ticket,
   contact: Contact
 ): Promise<Message> => {
+  console.log(msg);
   const b = JSON.parse(JSON.stringify(msg));
   const quotedMsg = await verifyQuotedMessage(msg);
 
@@ -145,10 +146,28 @@ const verifyMessage = async (
   const quotedMsg = await verifyQuotedMessage(msg);
   const a = JSON.parse(JSON.stringify(msg));
 
-  let arr = [];
+  const order = await msg.getOrder();
+
+  let resultProduct = [];
+  if (order) {
+    resultProduct.push(order.products.map((ele:any) => 
+    `
+    Nome: ${ele.name},
+    Quantidade: ${ele.quantity},
+    Valor unitário: R$ ${(ele.price / 1000).toFixed(2)},
+    Valor total por produto: R$ ${((ele.price / 1000) * ele.quantity).toFixed(2)}
+    `));
+  }
+
+  let resultPriceTotal = [];
+  if (order) {
+    resultPriceTotal.push(order.products.map((ele:any) => Number(((ele.price / 1000) * ele.quantity).toFixed(2))).reduce((sum, ele) => sum + ele))
+  }
+
+  let arrquotedMsg = [];
   if (a._data.quotedMsg) {
     if (a._data.quotedMsg.type === 'product') {
-      arr.push(`
+      arrquotedMsg.push(`
       Pergutando sobre o(a): ${a._data.quotedMsg.title}
       Cliente: ${msg.body}
       `);
@@ -159,9 +178,12 @@ const verifyMessage = async (
     id: msg.id.id,
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
-    body: arr.length > 0 ? arr[0] : (msg.body ? a._data.body : `Produto(s) do catálogo:
-      Quantidade: ${a._data.itemCount}
-      Valor: R$ ${(a._data.totalAmount1000 / 1000).toFixed(2)} ${a._data.totalCurrencyCode}`),
+    body: arrquotedMsg.length > 0 ? arrquotedMsg[0] : (msg.body ? msg.body :
+      `
+      Produto(s) do catálogo:
+      ${resultProduct[0].toString()}
+      Valor total do pedido: R$ ${resultPriceTotal[0].toFixed(2)}
+      `),
     fromMe: msg.fromMe,
     mediaType: msg.type,
     read: msg.fromMe,
@@ -275,7 +297,7 @@ const handleMessage = async (
   msg: WbotMessage,
   wbot: Session
 ): Promise<void> => {
-  console.log(msg);
+  // console.log(msg);
   if (!isValidMsg(msg)) {
     return;
   }
