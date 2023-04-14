@@ -41,10 +41,10 @@ If a contact sent a new message in less than 2 hours interval, and there is no t
 
 ## Instalação: PASSO A PASSO
 - Roda git clone no repositorio
-
+- Crie os arquivos .env, so copiar os de exemplo e apagar os comentarios
 <br />
 
-- Dentro de /whaticket `docker-composer up -u --build`
+- Dentro de /whaticket `docker-compose up -d --build` *Na primeiraz vez que rodar, vai demorar*
 - Dentro de /frontend e roda `npm i`
 - Dentro de /backend e roda `npm i`
 
@@ -54,11 +54,13 @@ If a contact sent a new message in less than 2 hours interval, and there is no t
 
 <br />
 
+- Dentro de  /backend rode `npx sequelize db:migrate`, vai dar erro, mas anote o numero que vem apos o @, exemplo '192.168.48.1'
+
 - Depois `docker exec -it whaticket-mysql-1 mysql -uroot -p`
 - Digitar a senha `strongpassword`
-- Criar um usuario `CREATE USER 'whaticket'@'192.168.240.1' IDENTIFIED BY 'strongpassword';`
-- Dar os privilegios `GRANT ALL PRIVILEGES ON *.* TO 'whaticket'@'192.168.240.1' WITH GRANT OPTION;`
-- `FLUSH PRIVILEGES;`
+- Criar um usuario `CREATE USER 'whaticket'@'192.168.48.1' IDENTIFIED BY 'strongpassword';`
+- Dar os privilegios `GRANT ALL PRIVILEGES ON *.* TO 'whaticket'@'192.168.48.1' WITH GRANT OPTION;`
+- E depois `FLUSH PRIVILEGES;`
 - E depois pode dar um `exit`
 
 <br />
@@ -67,7 +69,7 @@ If a contact sent a new message in less than 2 hours interval, and there is no t
 
 - E ja pode acessar o www.localhost:3000/login
 
-** Caso nao funcione, o erro pode estar no numero '192.168.240.1'
+** Caso nao funcione, o erro pode estar no numero '192.168.48.1'
 Entao, caso esteja com problemas tente, antes de dar o privilegio rodar dentro de /backend o
 `npx sequelize db:migrate` que ele vai dar o número correto
 Ai é só usar o número correto em todo o processo a partir da cricao do usuario. Tudo que esta "grifado" faz parte do código, até os ; (ponto e virgula)
