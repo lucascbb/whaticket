@@ -40,39 +40,43 @@ If a contact sent a new message in less than 2 hours interval, and there is no t
 - Receive media (images/audio/video/documents) ✅
 
 ## Instalação: PASSO A PASSO
-- Roda git clone no repositorio
-- Crie os arquivos .env, so copiar os de exemplo e apagar os comentarios
 <br />
 
-- Dentro de /whaticket `docker-compose up -d --build` *Na primeiraz vez que rodar, vai demorar*
-- Dentro de /frontend e roda `npm i`
-- Dentro de /backend e roda `npm i`
+- Rode `git clone` no repositório.
+
+- Crie os arquivos `.env` Basta copiar os arquivos de exemplo e apagar os comentários.
+
+- Dentro de /whaticket, execute `docker-compose up -d --build`. Na primeira vez que rodar, pode demorar.
+
+- Dentro de /frontend, execute `npm i` para instalar as dependências
+
+- Dentro de /backend, execute `npm i` para instalar as dependências
+
+- Dentro de /backend, execute `npm run build`
+
+- Dentro de /backend, execute `npx sequelize db:migrate`. Pode dar erro, mas anote o número que vem após o "@", por exemplo: "192.168.48.1".
+
+- Depois, execute `docker exec -it whaticket-mysql-1 mysql -uroot -p`
+
+- Digite a senha `strongpassword`.
+
+- Crie um usuário com o comando `CREATE USER 'whaticket'@'192.168.48.1' IDENTIFIED BY 'strongpassword';`
+
+- Dê os privilégios com o comando `GRANT ALL PRIVILEGES ON *.* TO 'whaticket'@'192.168.48.1' WITH GRANT OPTION;`
+
+- Em seguida, execute `FLUSH PRIVILEGES;`
+
+- Depois, pode dar um `exit`
+
+- Dentro de /backend, execute `npx sequelize db:migrate` e `npx sequelize db:seed:all`
+
+Agora, é possível acessar `www.localhost:3000/login`
+
+Caso não funcione, o erro pode estar no número "192.168.48.1"
+
+**Nesse caso, antes de dar o privilégio, execute dentro de /backend o comando npx sequelize db:migrate. Ele vai dar o número correto. Então, é só usar o número correto em todo o processo a partir da criação do usuário. Tudo que está em negrito faz parte do código, até os ";".
 
 <br />
-
-- Dentro de /backend `npm run build`
-
-<br />
-
-- Dentro de  /backend rode `npx sequelize db:migrate`, vai dar erro, mas anote o numero que vem apos o @, exemplo '192.168.48.1'
-
-- Depois `docker exec -it whaticket-mysql-1 mysql -uroot -p`
-- Digitar a senha `strongpassword`
-- Criar um usuario `CREATE USER 'whaticket'@'192.168.48.1' IDENTIFIED BY 'strongpassword';`
-- Dar os privilegios `GRANT ALL PRIVILEGES ON *.* TO 'whaticket'@'192.168.48.1' WITH GRANT OPTION;`
-- E depois `FLUSH PRIVILEGES;`
-- E depois pode dar um `exit`
-
-<br />
-
-- Dento de /backend rode `npx sequelize db:migrate` e `npx sequelize db:seed:all`
-
-- E ja pode acessar o www.localhost:3000/login
-
-** Caso nao funcione, o erro pode estar no numero '192.168.48.1'
-Entao, caso esteja com problemas tente, antes de dar o privilegio rodar dentro de /backend o
-`npx sequelize db:migrate` que ele vai dar o número correto
-Ai é só usar o número correto em todo o processo a partir da cricao do usuario. Tudo que esta "grifado" faz parte do código, até os ; (ponto e virgula)
 
 ## Installation and Usage (Linux Ubuntu - Development)
 

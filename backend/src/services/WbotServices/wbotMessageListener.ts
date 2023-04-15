@@ -157,9 +157,9 @@ const verifyMessage = async (
 
   let resultProduct = [];
   if (order) {
-    resultProduct.push(order.products.map((ele:any, i) => 
+    resultProduct.push(order.products.map((ele:any) => 
     `
-    Nome: ${ele.name}
+    Produto: ${ele.name}
     Quantidade: ${ele.quantity}
     Valor unitário: R$ ${(ele.price / 1000).toFixed(2)}
     Valor total por produto: R$ ${((ele.price / 1000) * ele.quantity).toFixed(2)}
@@ -191,7 +191,7 @@ const verifyMessage = async (
 
       ${resultProduct[0].toString()}
 
-      Total de Produtos: ${a._data.itemCount}
+      TOTAL DE PRODUTOS: ${a._data.itemCount}
       VALOR TOTAL DO PEDIDO: R$ ${resultPriceTotal[0].toFixed(2)}`),
     fromMe: msg.fromMe,
     mediaType: msg.type,
