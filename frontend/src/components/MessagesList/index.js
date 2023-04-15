@@ -593,6 +593,13 @@ const MessagesList = ({ ticketId, isGroup }) => {
   const renderMessages = () => {
     if (messagesList.length > 0) {
       const viewMessagesList = messagesList.map((message, index) => {
+
+        var arr = [];
+        if (message.body.includes('VALOR TOTAL DO PEDIDO')) {
+          arr.push(message.body.substring(0, 271));
+          arr.push(message.body.substring(272, 9999));
+        }
+
         if (!message.fromMe) {
           return (
             <React.Fragment key={message.id}>
@@ -614,12 +621,15 @@ const MessagesList = ({ ticketId, isGroup }) => {
                     {message.contact?.name}
                   </span>
                 )}
+                {arr.length > 0 ? <img src={arr[0]} width="100%" /> : undefined}
                 {(message.mediaUrl || message.mediaType === "location" || message.mediaType === "vcard"
                   //|| message.mediaType === "multi_vcard" 
                 ) && checkMessageMedia(message)}
                 <div className={classes.textContentItem}>
                   {message.quotedMsg && renderQuotedMessage(message)}
-                  <MarkdownWrapper>{message.body}</MarkdownWrapper>
+                  <MarkdownWrapper>
+                    {arr.length > 0 ? arr[1] : message.body}
+                  </MarkdownWrapper>
                   <span className={classes.timestamp}>
                     {format(parseISO(message.createdAt), "HH:mm")}
                   </span>
@@ -659,7 +669,9 @@ const MessagesList = ({ ticketId, isGroup }) => {
                     />
                   )}
                   {message.quotedMsg && renderQuotedMessage(message)}
-                  <MarkdownWrapper>{message.body}</MarkdownWrapper>
+                  <MarkdownWrapper>
+                    {message.body}
+                  </MarkdownWrapper>
                   <span className={classes.timestamp}>
                     {format(parseISO(message.createdAt), "HH:mm")}
                     {renderMessageAck(message)}
@@ -671,6 +683,9 @@ const MessagesList = ({ ticketId, isGroup }) => {
         }
       });
       return viewMessagesList;
+      // const urls = viewMessagesList.match(/https?:\/\/[^\s,]+/g);
+      // const res =urls.map((ele) => <img src={ele}/>)
+      // return res;
     } else {
       return <div>Say hello to your new contact!</div>;
     }

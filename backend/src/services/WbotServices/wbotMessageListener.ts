@@ -82,11 +82,12 @@ const verifyMediaMessage = async (
   ticket: Ticket,
   contact: Contact
 ): Promise<Message> => {
-  console.log(msg);
+  // console.log(msg);
   const b = JSON.parse(JSON.stringify(msg));
   const quotedMsg = await verifyQuotedMessage(msg);
 
   const media = await msg.downloadMedia();
+  console.log(media);
 
   if (!media) {
     throw new Error("ERR_WAPP_DOWNLOAD_MEDIA");
@@ -114,6 +115,7 @@ const verifyMediaMessage = async (
     Sentry.captureException(err);
     logger.error(err);
   }
+  console.log(media.mimetype.split("/")[0]);
 
   const messageData = {
     id: msg.id.id,
@@ -148,13 +150,18 @@ const verifyMessage = async (
 
   const order = await msg.getOrder();
 
+  const img = [];
+  if (order) {
+    img.push(order.products.map((ele:any) => ele.thumbnailUrl)[0]);
+  }
+
   let resultProduct = [];
   if (order) {
-    resultProduct.push(order.products.map((ele:any) => 
+    resultProduct.push(order.products.map((ele:any, i) => 
     `
-    Nome: ${ele.name},
-    Quantidade: ${ele.quantity},
-    Valor unitário: R$ ${(ele.price / 1000).toFixed(2)},
+    Nome: ${ele.name}
+    Quantidade: ${ele.quantity}
+    Valor unitário: R$ ${(ele.price / 1000).toFixed(2)}
     Valor total por produto: R$ ${((ele.price / 1000) * ele.quantity).toFixed(2)}
     `));
   }
@@ -179,11 +186,13 @@ const verifyMessage = async (
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
     body: arrquotedMsg.length > 0 ? arrquotedMsg[0] : (msg.body ? msg.body :
-      `
-      Produto(s) do catálogo:
+      `${img[0]}
+    Produto(s) do catálogo:
+
       ${resultProduct[0].toString()}
-      Valor total do pedido: R$ ${resultPriceTotal[0].toFixed(2)}
-      `),
+
+      Total de Produtos: ${a._data.itemCount}
+      VALOR TOTAL DO PEDIDO: R$ ${resultPriceTotal[0].toFixed(2)}`),
     fromMe: msg.fromMe,
     mediaType: msg.type,
     read: msg.fromMe,
@@ -298,6 +307,7 @@ const handleMessage = async (
   wbot: Session
 ): Promise<void> => {
   // console.log(msg);
+
   if (!isValidMsg(msg)) {
     return;
   }
