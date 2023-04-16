@@ -87,7 +87,6 @@ const verifyMediaMessage = async (
   const quotedMsg = await verifyQuotedMessage(msg);
 
   const media = await msg.downloadMedia();
-  console.log(media);
 
   if (!media) {
     throw new Error("ERR_WAPP_DOWNLOAD_MEDIA");
@@ -115,7 +114,7 @@ const verifyMediaMessage = async (
     Sentry.captureException(err);
     logger.error(err);
   }
-  console.log(media.mimetype.split("/")[0]);
+  console.log(media.filename);
 
   const messageData = {
     id: msg.id.id,
@@ -155,6 +154,8 @@ const verifyMessage = async (
     img.push(order.products.map((ele:any) => ele.thumbnailUrl)[0]);
   }
 
+  console.log(img);
+
   let resultProduct = [];
   if (order) {
     resultProduct.push(order.products.map((ele:any) => 
@@ -191,13 +192,15 @@ const verifyMessage = async (
 
       ${resultProduct[0].toString()}
 
-      TOTAL DE PRODUTOS: ${a._data.itemCount}
+      QUANTIDADE TOTAL DE PRODUTOS: ${a._data.itemCount}
       VALOR TOTAL DO PEDIDO: R$ ${resultPriceTotal[0].toFixed(2)}`),
     fromMe: msg.fromMe,
     mediaType: msg.type,
     read: msg.fromMe,
     quotedMsgId: quotedMsg?.id
   };
+
+  console.log(messageData.body);
 
   await ticket.update({
     lastMessage:

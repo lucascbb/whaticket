@@ -596,8 +596,9 @@ const MessagesList = ({ ticketId, isGroup }) => {
 
         var arr = [];
         if (message.body.includes('VALOR TOTAL DO PEDIDO')) {
-          arr.push(message.body.substring(0, 271));
-          arr.push(message.body.substring(272, 9999));
+          const valor = message.body.indexOf('Produto(s) do catálogo');
+          arr.push(message.body.substring(0, valor));
+          arr.push(message.body.substring(valor, 9999));
         }
 
         if (!message.fromMe) {
@@ -621,7 +622,7 @@ const MessagesList = ({ ticketId, isGroup }) => {
                     {message.contact?.name}
                   </span>
                 )}
-                {arr.length > 0 ? <img src={arr[0]} width="100%" /> : undefined}
+                {arr.length > 0 ? <img src={arr[0]} width="350px" height="350px" /> : undefined}
                 {(message.mediaUrl || message.mediaType === "location" || message.mediaType === "vcard"
                   //|| message.mediaType === "multi_vcard" 
                 ) && checkMessageMedia(message)}
