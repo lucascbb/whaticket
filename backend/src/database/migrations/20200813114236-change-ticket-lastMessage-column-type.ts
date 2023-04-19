@@ -3,7 +3,7 @@ import { QueryInterface, DataTypes } from "sequelize";
 module.exports = {
   up: (queryInterface: QueryInterface) => {
     return queryInterface.changeColumn("Tickets", "lastMessage", {
-      type: DataTypes.TEXT
+      type: DataTypes.STRING
     });
   },
 

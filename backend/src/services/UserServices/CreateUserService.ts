@@ -11,6 +11,7 @@ interface Request {
   queueIds?: number[];
   profile?: string;
   whatsappId?: number;
+  ramal: string;
 }
 
 interface Response {
@@ -18,12 +19,14 @@ interface Response {
   name: string;
   id: number;
   profile: string;
+  ramal: string;
 }
 
 const CreateUserService = async ({
   email,
   password,
   name,
+  ramal,
   queueIds = [],
   profile = "admin",
   whatsappId
@@ -59,6 +62,7 @@ const CreateUserService = async ({
       password,
       name,
       profile,
+      ramal,
       whatsappId: whatsappId ? whatsappId : null
     },
     { include: ["queues", "whatsapp"] }

@@ -29,6 +29,11 @@ module.exports = {
       updatedAt: {
         type: DataTypes.DATE,
         allowNull: false
+      },
+      ramal: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
       }
     });
   },

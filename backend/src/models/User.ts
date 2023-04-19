@@ -61,6 +61,9 @@ class User extends Model<User> {
   @UpdatedAt
   updatedAt: Date;
 
+  @Column
+  ramal: string;
+
   @HasMany(() => Ticket)
   tickets: Ticket[];
 

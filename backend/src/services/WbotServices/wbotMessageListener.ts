@@ -82,7 +82,7 @@ const verifyMediaMessage = async (
   ticket: Ticket,
   contact: Contact
 ): Promise<Message> => {
-  // console.log(msg);
+  console.log(msg);
   const b = JSON.parse(JSON.stringify(msg));
   const quotedMsg = await verifyQuotedMessage(msg);
 
@@ -114,7 +114,6 @@ const verifyMediaMessage = async (
     Sentry.captureException(err);
     logger.error(err);
   }
-  console.log(media.filename);
 
   const messageData = {
     id: msg.id.id,
@@ -153,8 +152,6 @@ const verifyMessage = async (
   if (order) {
     img.push(order.products.map((ele:any) => ele.thumbnailUrl)[0]);
   }
-
-  console.log(img);
 
   let resultProduct = [];
   if (order) {
@@ -199,8 +196,6 @@ const verifyMessage = async (
     read: msg.fromMe,
     quotedMsgId: quotedMsg?.id
   };
-
-  console.log(messageData.body);
 
   await ticket.update({
     lastMessage:
