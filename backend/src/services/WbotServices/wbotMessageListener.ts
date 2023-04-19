@@ -25,6 +25,9 @@ import UpdateTicketService from "../TicketServices/UpdateTicketService";
 import CreateContactService from "../ContactServices/CreateContactService";
 import GetContactService from "../ContactServices/GetContactService";
 import formatBody from "../../helpers/Mustache";
+import User from "../../models/User";
+
+const { Sequelize, Op } = require("sequelize");
 
 interface Session extends Client {
   id?: number;
@@ -82,7 +85,7 @@ const verifyMediaMessage = async (
   ticket: Ticket,
   contact: Contact
 ): Promise<Message> => {
-  console.log(msg);
+  // console.log(msg);
   const b = JSON.parse(JSON.stringify(msg));
   const quotedMsg = await verifyQuotedMessage(msg);
 
@@ -137,6 +140,25 @@ const verifyMediaMessage = async (
   return newMessage;
 };
 
+const automaticTransferTicket = async (msg: WbotMessage, ticket: Ticket) => {
+  const tes = await User.findOne({
+    where: { ramal: { [Op.like]: `${msg.body}` } },
+    attributes: ["id", "name"]
+  });
+
+  const userId = tes?.id;
+  const status = "open";
+
+  console.log(msg.body);
+  console.log(userId);
+  console.log(ticket.id);
+
+  if (userId) {
+    console.log("oi");
+    await Ticket.update({ userId, status }, { where: { id: ticket.id } });
+  }
+};
+
 const verifyMessage = async (
   msg: WbotMessage,
   ticket: Ticket,
@@ -144,34 +166,49 @@ const verifyMessage = async (
 ) => {
   if (msg.type === "location") msg = prepareLocation(msg);
   const quotedMsg = await verifyQuotedMessage(msg);
+
+  await automaticTransferTicket(msg, ticket);
+
   const a = JSON.parse(JSON.stringify(msg));
 
   const order = await msg.getOrder();
 
   const img = [];
   if (order) {
-    img.push(order.products.map((ele:any) => ele.thumbnailUrl)[0]);
+    img.push(order.products.map((ele: any) => ele.thumbnailUrl)[0]);
   }
 
-  let resultProduct = [];
+  const resultProduct = [];
   if (order) {
-    resultProduct.push(order.products.map((ele:any) => 
-    `
+    resultProduct.push(
+      order.products.map(
+        (ele: any) =>
+          `
     Produto: ${ele.name}
     Quantidade: ${ele.quantity}
     Valor unitário: R$ ${(ele.price / 1000).toFixed(2)}
-    Valor total por produto: R$ ${((ele.price / 1000) * ele.quantity).toFixed(2)}
-    `));
+    Valor total por produto: R$ ${((ele.price / 1000) * ele.quantity).toFixed(
+      2
+    )}
+    `
+      )
+    );
   }
 
-  let resultPriceTotal = [];
+  const resultPriceTotal = [];
   if (order) {
-    resultPriceTotal.push(order.products.map((ele:any) => Number(((ele.price / 1000) * ele.quantity).toFixed(2))).reduce((sum, ele) => sum + ele))
+    resultPriceTotal.push(
+      order.products
+        .map((ele: any) =>
+          Number(((ele.price / 1000) * ele.quantity).toFixed(2))
+        )
+        .reduce((sum, ele) => sum + ele)
+    );
   }
 
-  let arrquotedMsg = [];
+  const arrquotedMsg = [];
   if (a._data.quotedMsg) {
-    if (a._data.quotedMsg.type === 'product') {
+    if (a._data.quotedMsg.type === "product") {
       arrquotedMsg.push(`
       Pergutando sobre o(a): ${a._data.quotedMsg.title}
       Cliente: ${msg.body}
@@ -183,14 +220,18 @@ const verifyMessage = async (
     id: msg.id.id,
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
-    body: arrquotedMsg.length > 0 ? arrquotedMsg[0] : (msg.body ? msg.body :
-      `${img[0]}
+    body:
+      arrquotedMsg.length > 0
+        ? arrquotedMsg[0]
+        : msg.body
+        ? msg.body
+        : `${img[0]}
     Produto(s) do catálogo:
 
       ${resultProduct[0].toString()}
 
       QUANTIDADE TOTAL DE PRODUTOS: ${a._data.itemCount}
-      VALOR TOTAL DO PEDIDO: R$ ${resultPriceTotal[0].toFixed(2)}`),
+      VALOR TOTAL DO PEDIDO: R$ ${resultPriceTotal[0].toFixed(2)}`,
     fromMe: msg.fromMe,
     mediaType: msg.type,
     read: msg.fromMe,
