@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Users = () => {
   const classes = useStyles();
-
+  
   const [loading, setLoading] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const [hasMore, setHasMore] = useState(false);
@@ -237,18 +237,11 @@ const Users = () => {
           <TableHead>
             <TableRow>
               <TableCell align="center">{i18n.t("users.table.name")}</TableCell>
-              <TableCell align="center">
-                {i18n.t("users.table.email")}
-              </TableCell>
-              <TableCell align="center">
-                {i18n.t("users.table.profile")}
-              </TableCell>
-              <TableCell align="center">
-                {i18n.t("users.table.whatsapp")}
-              </TableCell>              
-              <TableCell align="center">
-                {i18n.t("users.table.actions")}
-              </TableCell>
+              <TableCell align="center">{i18n.t("users.table.email")}</TableCell>
+              <TableCell align="center">{i18n.t("users.table.profile")}</TableCell>
+              <TableCell align="center">{i18n.t("users.table.whatsapp")}</TableCell>
+              <TableCell align="center">Ramal</TableCell>
+              <TableCell align="center">{i18n.t("users.table.actions")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -259,6 +252,7 @@ const Users = () => {
                   <TableCell align="center">{user.email}</TableCell>
                   <TableCell align="center">{user.profile}</TableCell>
                   <TableCell align="center">{user.whatsapp?.name}</TableCell>
+                  <TableCell align="center">{user.ramal}</TableCell>
                   <TableCell align="center">
                     <IconButton
                       size="small"
@@ -279,7 +273,7 @@ const Users = () => {
                   </TableCell>
                 </TableRow>
               ))}
-              {loading && <TableRowSkeleton columns={4} />}
+              {loading && <TableRowSkeleton columns={5} />}
             </>
           </TableBody>
         </Table>

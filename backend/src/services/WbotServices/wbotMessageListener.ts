@@ -141,20 +141,21 @@ const verifyMediaMessage = async (
 };
 
 const automaticTransferTicket = async (msg: WbotMessage, ticket: Ticket) => {
-  const tes = await User.findOne({
-    where: { ramal: { [Op.like]: `${msg.body}` } },
-    attributes: ["id", "name"]
-  });
+  const arrStrings = msg.body.split(" ");
+  const promises = arrStrings.map(str =>
+    User.findOne({
+      where: { ramal: { [Op.like]: `${str}` } },
+      attributes: ["id", "name"]
+    })
+  );
 
-  const userId = tes?.id;
-  const status = "open";
+  const results = await Promise.all(promises);
+  const result = JSON.parse(JSON.stringify(results));
+  const respon = result.filter((ele: any) => ele !== null);
 
-  console.log(msg.body);
-  console.log(userId);
-  console.log(ticket.id);
-
-  if (userId) {
-    console.log("oi");
+  if (respon[0]) {
+    const userId = respon[0].id;
+    const status = "open";
     await Ticket.update({ userId, status }, { where: { id: ticket.id } });
   }
 };

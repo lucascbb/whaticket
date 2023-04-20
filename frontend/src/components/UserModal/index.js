@@ -69,6 +69,7 @@ const UserSchema = Yup.object().shape({
 		.min(2, "Too Short!")
 		.max(50, "Too Long!")
 		.required("Required"),
+	ramal: Yup.string().length(3, "Deve conter 3 caracteres").required("Required"),
 	password: Yup.string().min(5, "Too Short!").max(50, "Too Long!"),
 	email: Yup.string().email("Invalid email").required("Required"),
 });
@@ -80,6 +81,7 @@ const UserModal = ({ open, onClose, userId }) => {
 		name: "",
 		email: "",
 		password: "",
+		ramal: "",
 		profile: "user"
 	};
 
@@ -201,6 +203,17 @@ const UserModal = ({ open, onClose, userId }) => {
 										name="email"
 										error={touched.email && Boolean(errors.email)}
 										helperText={touched.email && errors.email}
+										variant="outlined"
+										margin="dense"
+										fullWidth
+									/>
+									<Field
+										as={TextField}
+										label="Ramal"
+										autoFocus
+										name="ramal"
+										error={touched.ramal && Boolean(errors.ramal)}
+										helperText={touched.ramal && errors.ramal}
 										variant="outlined"
 										margin="dense"
 										fullWidth

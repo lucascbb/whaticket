@@ -29,19 +29,6 @@ import { i18n } from "../../translate/i18n";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
 
-// const Copyright = () => {
-// 	return (
-// 		<Typography variant="body2" color="textSecondary" align="center">
-// 			{"Copyleft "}
-// 			<Link color="inherit" href="https://github.com/canove">
-// 				Canove
-// 			</Link>{" "}
-// 			{new Date().getFullYear()}
-// 			{"."}
-// 		</Typography>
-// 	);
-// };
-
 const useStyles = makeStyles(theme => ({
 	paper: {
 		marginTop: theme.spacing(8),
@@ -67,6 +54,7 @@ const UserSchema = Yup.object().shape({
 		.min(2, "Too Short!")
 		.max(50, "Too Long!")
 		.required("Required"),
+	ramal: Yup.string().length(3, "Deve conter 3 caracteres").required(),
 	password: Yup.string().min(5, "Too Short!").max(50, "Too Long!"),
 	email: Yup.string().email("Invalid email").required("Required"),
 });
@@ -125,6 +113,21 @@ const SignUp = () => {
 										fullWidth
 										id="name"
 										label={i18n.t("signup.form.name")}
+										autoFocus
+									/>
+								</Grid>
+
+								<Grid item xs={12}>
+									<Field
+										as={TextField}
+										autoComplete="ramal"
+										name="ramal"
+										error={touched.ramal && Boolean(errors.ramal)}
+										helperText={touched.ramal && errors.ramal}
+										variant="outlined"
+										fullWidth
+										id="ramal"
+										label="Ramal"
 										autoFocus
 									/>
 								</Grid>
