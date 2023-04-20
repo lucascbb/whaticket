@@ -240,7 +240,9 @@ const Users = () => {
               <TableCell align="center">{i18n.t("users.table.email")}</TableCell>
               <TableCell align="center">{i18n.t("users.table.profile")}</TableCell>
               <TableCell align="center">{i18n.t("users.table.whatsapp")}</TableCell>
+              {/* Inicio do codigo Automatic Transfer */}
               <TableCell align="center">Ramal</TableCell>
+              {/* Fim do codigo Automatic Transfer */}
               <TableCell align="center">{i18n.t("users.table.actions")}</TableCell>
             </TableRow>
           </TableHead>
@@ -252,7 +254,9 @@ const Users = () => {
                   <TableCell align="center">{user.email}</TableCell>
                   <TableCell align="center">{user.profile}</TableCell>
                   <TableCell align="center">{user.whatsapp?.name}</TableCell>
+                  {/* Inicio do codigo Automatic Transfer */}
                   <TableCell align="center">{user.ramal}</TableCell>
+                  {/* Fim do codigo Automatic Transfer */}
                   <TableCell align="center">
                     <IconButton
                       size="small"

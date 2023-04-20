@@ -61,8 +61,10 @@ class User extends Model<User> {
   @UpdatedAt
   updatedAt: Date;
 
+  // Inicio do codigo Automatic Transfer
   @Column
   ramal: string;
+  // Fim do codigo Automatic Transfer
 
   @HasMany(() => Ticket)
   tickets: Ticket[];

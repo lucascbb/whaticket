@@ -14,7 +14,9 @@ module.exports = {
           tokenVersion: 0,
           createdAt: new Date(),
           updatedAt: new Date(),
-          ramal: "111"
+          // Inicio do codigo Automatic Transfer
+          ramal: "#admin"
+          // Fim do codigo Automatic Transfer
         }
       ],
       {}

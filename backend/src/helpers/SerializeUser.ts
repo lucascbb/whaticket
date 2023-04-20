@@ -9,7 +9,9 @@ interface SerializedUser {
   profile: string;
   queues: Queue[];
   whatsapp: Whatsapp;
+  // Inicio do codigo Automatic Transfer
   ramal: string;
+  // Fim do codigo Automatic Transfer
 }
 
 export const SerializeUser = (user: User): SerializedUser => {
@@ -20,6 +22,8 @@ export const SerializeUser = (user: User): SerializedUser => {
     profile: user.profile,
     queues: user.queues,
     whatsapp: user.whatsapp,
+    // Inicio do codigo Automatic Transfer
     ramal: user.ramal
+    // Fim do codigo Automatic Transfer
   };
 };
