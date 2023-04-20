@@ -37,7 +37,7 @@ const UpdateUserService = async ({
     email: Yup.string().email(),
     profile: Yup.string(),
     password: Yup.string(),
-    ramal: Yup.string().length(3)
+    ramal: Yup.string().matches(/^#.*$/, 'Deve começar com "#"')
   });
 
   const {

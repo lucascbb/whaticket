@@ -33,6 +33,9 @@ const CreateUserService = async ({
 }: Request): Promise<Response> => {
   const schema = Yup.object().shape({
     name: Yup.string().required().min(2),
+    ramal: Yup.string()
+      .matches(/^#.*$/, 'O ramal deve começar com "#"')
+      .required("Required"),
     email: Yup.string()
       .email()
       .required()
@@ -51,7 +54,7 @@ const CreateUserService = async ({
   });
 
   try {
-    await schema.validate({ email, password, name });
+    await schema.validate({ email, password, name, ramal });
   } catch (err) {
     throw new AppError(err.message);
   }
@@ -63,7 +66,7 @@ const CreateUserService = async ({
       name,
       profile,
       ramal,
-      whatsappId: whatsappId ? whatsappId : null
+      whatsappId: whatsappId || null
     },
     { include: ["queues", "whatsapp"] }
   );

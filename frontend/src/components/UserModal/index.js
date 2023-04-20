@@ -23,7 +23,7 @@ import {
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 import { makeStyles } from "@material-ui/core/styles";
-import { green } from "@material-ui/core/colors";
+import { green, grey } from "@material-ui/core/colors";
 
 import { i18n } from "../../translate/i18n";
 
@@ -44,6 +44,10 @@ const useStyles = makeStyles(theme => ({
 		"& > *:not(:last-child)": {
 			marginRight: theme.spacing(1),
 		},
+	},
+
+	ramal: {
+		background: grey,
 	},
 
 	btnWrapper: {
@@ -69,7 +73,7 @@ const UserSchema = Yup.object().shape({
 		.min(2, "Too Short!")
 		.max(50, "Too Long!")
 		.required("Required"),
-	ramal: Yup.string().length(3, "Deve conter 3 caracteres").required("Required"),
+	ramal: Yup.string().matches(/^#.*$/, 'O ramal deve começar com "#"').required("Required"),
 	password: Yup.string().min(5, "Too Short!").max(50, "Too Long!"),
 	email: Yup.string().email("Invalid email").required("Required"),
 });
@@ -81,7 +85,7 @@ const UserModal = ({ open, onClose, userId }) => {
 		name: "",
 		email: "",
 		password: "",
-		ramal: "",
+		ramal: "#",
 		profile: "user"
 	};
 
@@ -210,6 +214,7 @@ const UserModal = ({ open, onClose, userId }) => {
 									<Field
 										as={TextField}
 										label="Ramal"
+										id="userRamalInput"
 										autoFocus
 										name="ramal"
 										error={touched.ramal && Boolean(errors.ramal)}

@@ -54,7 +54,7 @@ const UserSchema = Yup.object().shape({
 		.min(2, "Too Short!")
 		.max(50, "Too Long!")
 		.required("Required"),
-	ramal: Yup.string().length(3, "Deve conter 3 caracteres").required(),
+	ramal: Yup.string().matches(/^#.*$/, 'O ramal deve começar com "#"').required("Required"),
 	password: Yup.string().min(5, "Too Short!").max(50, "Too Long!"),
 	email: Yup.string().email("Invalid email").required("Required"),
 });
@@ -63,7 +63,7 @@ const SignUp = () => {
 	const classes = useStyles();
 	const history = useHistory();
 
-	const initialState = { name: "", email: "", password: "" };
+	const initialState = { name: "", ramal: "#", email: "", password: "" };
 	const [showPassword, setShowPassword] = useState(false);
 	const [user] = useState(initialState);
 
@@ -116,7 +116,6 @@ const SignUp = () => {
 										autoFocus
 									/>
 								</Grid>
-
 								<Grid item xs={12}>
 									<Field
 										as={TextField}
@@ -131,7 +130,6 @@ const SignUp = () => {
 										autoFocus
 									/>
 								</Grid>
-
 								<Grid item xs={12}>
 									<Field
 										as={TextField}
