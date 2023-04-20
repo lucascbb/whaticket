@@ -27,6 +27,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
+  // Inicio do codigo Automatic Transfer
   const { email, password, ramal, name, profile, queueIds, whatsappId } = req.body;
 
   if (
@@ -47,6 +48,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     whatsappId,
     ramal
   });
+  // Fim do codigo Automatic Transfer
 
   const io = getIO();
   io.emit("user", {

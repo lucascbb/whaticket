@@ -30,11 +30,13 @@ module.exports = {
         type: DataTypes.DATE,
         allowNull: false
       },
+      // Inicio do codigo Automatic Transfer
       ramal: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
       }
+      // Fim do codigo Automatic Transfer
     });
   },
 

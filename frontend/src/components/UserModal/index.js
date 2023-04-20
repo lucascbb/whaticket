@@ -46,10 +46,6 @@ const useStyles = makeStyles(theme => ({
 		},
 	},
 
-	ramal: {
-		background: grey,
-	},
-
 	btnWrapper: {
 		position: "relative",
 	},
@@ -73,7 +69,9 @@ const UserSchema = Yup.object().shape({
 		.min(2, "Too Short!")
 		.max(50, "Too Long!")
 		.required("Required"),
+	// Inicio do codigo Automatic Transfer
 	ramal: Yup.string().matches(/^#.*$/, 'O ramal deve começar com "#"').required("Required"),
+	// Fim do codigo Automatic Transfer
 	password: Yup.string().min(5, "Too Short!").max(50, "Too Long!"),
 	email: Yup.string().email("Invalid email").required("Required"),
 });
@@ -85,7 +83,9 @@ const UserModal = ({ open, onClose, userId }) => {
 		name: "",
 		email: "",
 		password: "",
+		// Inicio do codigo Automatic Transfer
 		ramal: "#",
+		// Fim do codigo Automatic Transfer
 		profile: "user"
 	};
 
@@ -211,6 +211,7 @@ const UserModal = ({ open, onClose, userId }) => {
 										margin="dense"
 										fullWidth
 									/>
+									{/* Inicio do codigo Automatic Transfer */}
 									<Field
 										as={TextField}
 										label="Ramal"
@@ -223,6 +224,7 @@ const UserModal = ({ open, onClose, userId }) => {
 										margin="dense"
 										fullWidth
 									/>
+									{/* Fim do codigo Automatic Transfer */}
 									<FormControl
 										variant="outlined"
 										className={classes.formControl}
