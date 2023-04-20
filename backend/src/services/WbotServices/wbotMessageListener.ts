@@ -169,6 +169,7 @@ const verifyMessage = async (
 
   await automaticTransferTicket(msg, ticket);
 
+  // Inicio do codigo Whatsapp Store
   const a = JSON.parse(JSON.stringify(msg));
 
   const order = await msg.getOrder();
@@ -237,6 +238,8 @@ const verifyMessage = async (
     read: msg.fromMe,
     quotedMsgId: quotedMsg?.id
   };
+
+  // Fim do codigo Whatsapp Store
 
   await ticket.update({
     lastMessage:
@@ -331,8 +334,10 @@ const isValidMsg = (msg: WbotMessage): boolean => {
     msg.type === "image" ||
     msg.type === "document" ||
     msg.type === "vcard" ||
+    // Inicio do codigo Whatsapp Store
     msg.type === "order" ||
     msg.type === "product" ||
+    // Fim do codigo Whatsapp Store
     // msg.type === "multi_vcard" ||
     msg.type === "sticker" ||
     msg.type === "location"
@@ -345,8 +350,6 @@ const handleMessage = async (
   msg: WbotMessage,
   wbot: Session
 ): Promise<void> => {
-  // console.log(msg);
-
   if (!isValidMsg(msg)) {
     return;
   }
@@ -432,10 +435,10 @@ const handleMessage = async (
         const array = msg.body.split("\n");
         const obj = [];
         let contact = "";
-        for (let index = 0; index < array.length; index++) {
+        for (let index = 0; index < array.length; index += 1) {
           const v = array[index];
           const values = v.split(":");
-          for (let ind = 0; ind < values.length; ind++) {
+          for (let ind = 0; ind < values.length; ind += 1) {
             if (values[ind].indexOf("+") !== -1) {
               obj.push({ number: values[ind] });
             }
