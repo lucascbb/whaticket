@@ -27,7 +27,7 @@ import GetContactService from "../ContactServices/GetContactService";
 import formatBody from "../../helpers/Mustache";
 import User from "../../models/User";
 
-const { Sequelize, Op } = require("sequelize");
+const { Op } = require("sequelize");
 
 interface Session extends Client {
   id?: number;
@@ -333,7 +333,7 @@ const isValidMsg = (msg: WbotMessage): boolean => {
     msg.type === "vcard" ||
     msg.type === "order" ||
     msg.type === "product" ||
-    // msg.type === "multi_vcard" ||
+    msg.type === "multi_vcard" ||
     msg.type === "sticker" ||
     msg.type === "location"
   )
@@ -368,8 +368,8 @@ const handleMessage = async (
         !msg.hasMedia &&
         msg.type !== "location" &&
         msg.type !== "chat" &&
-        msg.type !== "vcard"
-        // && msg.type !== "multi_vcard"
+        msg.type !== "vcard" &&
+        msg.type !== "multi_vcard"
       )
         return;
 
@@ -455,7 +455,7 @@ const handleMessage = async (
       }
     }
 
-    /* if (msg.type === "multi_vcard") {
+    if (msg.type === "multi_vcard") {
       try {
         const array = msg.vCards.toString().split("\n");
         let name = "";
@@ -514,7 +514,7 @@ const handleMessage = async (
       } catch (error) {
         console.log(error);
       }
-    } */
+    }
   } catch (err) {
     Sentry.captureException(err);
     logger.error(`Error handling whatsapp message: Err: ${err}`);
