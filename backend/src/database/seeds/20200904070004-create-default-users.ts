@@ -14,7 +14,7 @@ module.exports = {
           tokenVersion: 0,
           createdAt: new Date(),
           updatedAt: new Date(),
-          ramal: "111"
+          ramal: "#admin"
         }
       ],
       {}
