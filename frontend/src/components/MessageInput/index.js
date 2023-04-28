@@ -298,6 +298,7 @@ const MessageInput = ({ ticketStatus }) => {
         : inputMessage.trim(),
       quotedMsg: replyingMessage,
     };
+    console.log(message);
     try {
       await api.post(`/messages/${ticketId}`, message);
     } catch (err) {

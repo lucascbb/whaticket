@@ -53,7 +53,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   } else {
     await SendWhatsAppMessage({ body, ticket, quotedMsg });
   }
-
+  console.log(res.send());
   return res.send();
 };
 

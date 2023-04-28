@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useReducer, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import openSocket from "../../services/socket-io";
 
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import Paper from "@material-ui/core/Paper";
 
-// import api from "../../services/api";
+import api from "../../services/api";
 import TicketListItem from "../TicketListItem";
 import TicketsListSkeleton from "../TicketsListSkeleton";
 
@@ -154,23 +155,12 @@ const reducer = (state, action) => {
 };
 
 	const TicketsList = (props) => {
+	const history = useHistory();
 	const { status, searchParam, showAll, selectedQueueIds, updateCount, style } = props;
 	const classes = useStyles();
 	const [pageNumber, setPageNumber] = useState(1);
 	const [ticketsList, dispatch] = useReducer(reducer, []);
 	const { user } = useContext(AuthContext);
-
-	// useEffect(() => {
-	// 	const fetchUsers = async () => {
-	// 		try {
-	// 			const { data } = await api.get('/users');
-	// 			setDataList(data.users);
-	// 		} catch (err) {
-	// 			console.error(err);
-	// 		}
-	// 	};
-	// 	fetchUsers();
-	// }, []);
 	
 	useEffect(() => {
 		dispatch({ type: "RESET" });
@@ -244,6 +234,37 @@ const reducer = (state, action) => {
 			}
 		});
 
+		socket.on("appMessage", async data => {
+			const users = await api.get("/users/");
+			const usersRamal = JSON.parse(JSON.stringify(users));
+			const usuarios = usersRamal.data;
+			const ramals = usuarios.users.map((ele) => ele.ramal);
+		
+			for (const element of ramals) {
+				if (data.message.body.includes(element)) {
+					const a = usuarios.users.filter((ele) => ele.ramal === element)
+					console.log(a[0]);
+		
+					const changed = {
+						userId: a[0].id
+					}
+
+					const bodyMsg = {
+						body: `Seja Bem-vindo! Sua conversa foi transferida para ${a[0].name}`
+					}
+					
+					await api.post(`/messages/${data.ticket.id}`, bodyMsg);
+					await api.put(`/tickets/${data.ticket.id}`, changed);
+					window.location.reload();
+					break;
+				}
+			}
+		
+			console.log(user);
+			console.log(data);
+			console.log(data.message.body);
+		});
+
 		socket.on("contact", data => {
 			if (data.action === "update") {
 				dispatch({
@@ -264,26 +285,6 @@ const reducer = (state, action) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticketsList]);
-
-	// useEffect(() => {
-
-	// 	const resOk = ticketsList.map((ele) => ele.lastMessage);
-
-	// 	let a = [];
-	// 	for (let i = 0; i < dataList.length; i++) {
-	// 		a.push(...dataList[i].ramal)
-	// 	}
-	// 	const users = ['111', '112', '113']
-
-	// 	if (resOk)
-	// 	for (let i = 0; i < users.length; i++) {
-	// 		if (resOk.includes(users[i])) {
-	// 			console.log('atualiza')
-	// 			window.location.reload(true);
-	// 		}
-	// 	}
-		
-  // }, [ticketsList]);
 
 	const loadMore = () => {
 		setPageNumber(prevState => prevState + 1);
