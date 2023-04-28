@@ -139,25 +139,25 @@ const verifyMediaMessage = async (
   return newMessage;
 };
 
-const automaticTransferTicket = async (msg: WbotMessage, ticket: Ticket) => {
-  const arrStrings = msg.body.split(" ");
-  const promises = arrStrings.map(str =>
-    User.findOne({
-      where: { ramal: { [Op.like]: `${str}` } },
-      attributes: ["id", "name"]
-    })
-  );
+// const automaticTransferTicket = async (msg: WbotMessage, ticket: Ticket) => {
+//   const arrStrings = msg.body.split(" ");
+//   const promises = arrStrings.map(str =>
+//     User.findOne({
+//       where: { ramal: { [Op.like]: `${str}` } },
+//       attributes: ["id", "name"]
+//     })
+//   );
 
-  const results = await Promise.all(promises);
-  const result = JSON.parse(JSON.stringify(results));
-  const respon = result.filter((ele: any) => ele !== null);
+//   const results = await Promise.all(promises);
+//   const result = JSON.parse(JSON.stringify(results));
+//   const respon = result.filter((ele: any) => ele !== null);
 
-  if (respon[0]) {
-    const userId = respon[0].id;
-    const status = "open";
-    await Ticket.update({ userId, status }, { where: { id: ticket.id } });
-  }
-};
+//   if (respon[0]) {
+//     const userId = respon[0].id;
+//     const status = "pending";
+//     await Ticket.update({ userId, status }, { where: { id: ticket.id } });
+//   }
+// };
 
 const verifyMessage = async (
   msg: WbotMessage,
@@ -167,7 +167,7 @@ const verifyMessage = async (
   if (msg.type === "location") msg = prepareLocation(msg);
   const quotedMsg = await verifyQuotedMessage(msg);
 
-  await automaticTransferTicket(msg, ticket);
+  // await automaticTransferTicket(msg, ticket);
 
   const a = JSON.parse(JSON.stringify(msg));
 

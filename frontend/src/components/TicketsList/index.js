@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import openSocket from "../../services/socket-io";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -155,6 +155,7 @@ const reducer = (state, action) => {
 };
 
 	const TicketsList = (props) => {
+		const location = useLocation();
 		const history = useHistory();
 		const { status, searchParam, showAll, selectedQueueIds, updateCount, style } = props;
 		const classes = useStyles();
@@ -249,12 +250,14 @@ const reducer = (state, action) => {
 					}
 		
 					const changed = {
-						userId: a[0].id
+						userId: a[0].id,
+						status: "pending"
 					}
 
 					await api.post(`/messages/${data.ticket.id}`, bodyMsg);
 					await api.put(`/tickets/${data.ticket.id}`, changed);
-					window.location.reload();
+					location.replace(location.href)
+					window.location.reload(true);
 					break;
 				}
 			}
@@ -317,21 +320,11 @@ const reducer = (state, action) => {
 					</div>
 				) : (
 					<>
-						{ticketsList.map(ticket => {
-							if (ticket.status === "pending") {
-								if (user.id === ticket.id || ticket.userId === null || user.profile === "admin") {
-									return <TicketListItem ticket={ticket} key={ticket.id} />;
-								} else {
-									return null;
-								}
-							} else {
-								if (ticket.userId === null || user.id === ticket.userId || user.profile === "admin") {
-									return <TicketListItem ticket={ticket} key={ticket.id} />;
-								} else {
-									return null;
-								}
-							}
-						})}
+						{ticketsList.map(ticket => (
+							ticket.userId === null || ticket.userId === user.id || user.profile === "admin" ? (
+								<TicketListItem ticket={ticket} key={ticket.id} />
+							) : null
+						))}
 					</>
 				)}
 					{loading && <TicketsListSkeleton />}

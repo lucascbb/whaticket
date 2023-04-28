@@ -102,8 +102,8 @@ const TicketsManager = () => {
   const searchInputRef = useRef();
   const { user } = useContext(AuthContext);
 
-  const [openCount, setOpenCount] = useState(0);
-  const [pendingCount, setPendingCount] = useState(0);
+  const [openCount, setOpenCount] = useState('x');
+  const [pendingCount, setPendingCount] = useState('x');
 
   const userQueueIds = user.queues.map((q) => q.id);
   const [selectedQueueIds, setSelectedQueueIds] = useState(userQueueIds || []);
@@ -278,13 +278,13 @@ const TicketsManager = () => {
             status="open"
             showAll={showAllTickets}
             selectedQueueIds={selectedQueueIds}
-            updateCount={(val) => setOpenCount(val)}
+            updateCount={(e) => setOpenCount(e)}
             style={applyPanelStyle("open")}
           />
           <TicketsList
             status="pending"
             selectedQueueIds={selectedQueueIds}
-            updateCount={(val) => setPendingCount(val)}
+            updateCount={(e) => e === 0 ? setOpenCount(e) : setOpenCount('x')}
             style={applyPanelStyle("pending")}
           />
         </Paper>
