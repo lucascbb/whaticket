@@ -54,7 +54,6 @@ const TransferTicketModal = ({ modalOpen, onClose, ticketid, ticketWhatsappId })
 	const { user: loggedInUser } = useContext(AuthContext);
 
 	useEffect(() => {
-		console.log('teste')
 		const loadQueues = async () => {
 			const list = await findAllQueues();
 			setAllQueues(list);
@@ -65,7 +64,6 @@ const TransferTicketModal = ({ modalOpen, onClose, ticketid, ticketWhatsappId })
 	}, []);
 
 	useEffect(() => {
-		console.log('teste 2')
 		if (!modalOpen || searchParam.length < 3) {
 			setLoading(false);
 			return;
@@ -91,14 +89,12 @@ const TransferTicketModal = ({ modalOpen, onClose, ticketid, ticketWhatsappId })
 	}, [searchParam, modalOpen]);
 
 	const handleClose = () => {
-		console.log('teste 3')
 		onClose();
 		setSearchParam("");
 		setSelectedUser(null);
 	};
 
 	const handleSaveTicket = async e => {
-		console.log('teste 4')
 		e.preventDefault();
 		if (!ticketid) return;
 		setLoading(true);

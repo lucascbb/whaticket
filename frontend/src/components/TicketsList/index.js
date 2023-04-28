@@ -155,12 +155,12 @@ const reducer = (state, action) => {
 };
 
 	const TicketsList = (props) => {
-	const history = useHistory();
-	const { status, searchParam, showAll, selectedQueueIds, updateCount, style } = props;
-	const classes = useStyles();
-	const [pageNumber, setPageNumber] = useState(1);
-	const [ticketsList, dispatch] = useReducer(reducer, []);
-	const { user } = useContext(AuthContext);
+		const history = useHistory();
+		const { status, searchParam, showAll, selectedQueueIds, updateCount, style } = props;
+		const classes = useStyles();
+		const [pageNumber, setPageNumber] = useState(1);
+		const [ticketsList, dispatch] = useReducer(reducer, []);
+		const { user } = useContext(AuthContext);
 	
 	useEffect(() => {
 		dispatch({ type: "RESET" });
@@ -243,28 +243,23 @@ const reducer = (state, action) => {
 			for (const element of ramals) {
 				if (data.message.body.includes(element)) {
 					const a = usuarios.users.filter((ele) => ele.ramal === element)
-					console.log(a[0]);
+					console.log(data.message.body);
+					const bodyMsg = {
+						body: `Seja Bem-vindo! Sua conversa foi transferida para ${a[0].name}`
+					}
 		
 					const changed = {
 						userId: a[0].id
 					}
 
-					const bodyMsg = {
-						body: `Seja Bem-vindo! Sua conversa foi transferida para ${a[0].name}`
-					}
-					
 					await api.post(`/messages/${data.ticket.id}`, bodyMsg);
 					await api.put(`/tickets/${data.ticket.id}`, changed);
 					window.location.reload();
 					break;
 				}
 			}
-		
-			console.log(user);
-			console.log(data);
-			console.log(data.message.body);
 		});
-
+		
 		socket.on("contact", data => {
 			if (data.action === "update") {
 				dispatch({
@@ -311,22 +306,34 @@ const reducer = (state, action) => {
 				onScroll={handleScroll}
 			>
 				<List style={{ paddingTop: 0 }}>
-					{ticketsList.length === 0 && !loading ? (
-						<div className={classes.noTicketsDiv}>
-							<span className={classes.noTicketsTitle}>
-								{i18n.t("ticketsList.noTicketsTitle")}
-							</span>
-							<p className={classes.noTicketsText}>
-								{i18n.t("ticketsList.noTicketsMessage")}
-							</p>
-						</div>
-					) : (
-						<>
-							{ticketsList.map(ticket => (
-								<TicketListItem ticket={ticket} key={ticket.id} />
-							))}
-						</>
-					)}
+				{ticketsList.length === 0 && !loading ? (
+					<div className={classes.noTicketsDiv}>
+						<span className={classes.noTicketsTitle}>
+							{i18n.t("ticketsList.noTicketsTitle")}
+						</span>
+						<p className={classes.noTicketsText}>
+							{i18n.t("ticketsList.noTicketsMessage")}
+						</p>
+					</div>
+				) : (
+					<>
+						{ticketsList.map(ticket => {
+							if (ticket.status === "pending") {
+								if (user.id === ticket.id || ticket.userId === null || user.profile === "admin") {
+									return <TicketListItem ticket={ticket} key={ticket.id} />;
+								} else {
+									return null;
+								}
+							} else {
+								if (ticket.userId === null || user.id === ticket.userId || user.profile === "admin") {
+									return <TicketListItem ticket={ticket} key={ticket.id} />;
+								} else {
+									return null;
+								}
+							}
+						})}
+					</>
+				)}
 					{loading && <TicketsListSkeleton />}
 				</List>
 			</Paper>
