@@ -10,6 +10,7 @@ import {
   Client
 } from "whatsapp-web.js";
 
+import { any } from "bluebird";
 import Contact from "../../models/Contact";
 import Ticket from "../../models/Ticket";
 import Message from "../../models/Message";
@@ -26,6 +27,7 @@ import CreateContactService from "../ContactServices/CreateContactService";
 import GetContactService from "../ContactServices/GetContactService";
 import formatBody from "../../helpers/Mustache";
 import User from "../../models/User";
+import ListUsersService from "../UserServices/ListUsersService";
 
 const { Op } = require("sequelize");
 
@@ -139,25 +141,27 @@ const verifyMediaMessage = async (
   return newMessage;
 };
 
-// const automaticTransferTicket = async (msg: WbotMessage, ticket: Ticket) => {
-//   const arrStrings = msg.body.split(" ");
-//   const promises = arrStrings.map(str =>
-//     User.findOne({
-//       where: { ramal: { [Op.like]: `${str}` } },
-//       attributes: ["id", "name"]
-//     })
-//   );
+// Inicio do codigo Automatic Transfer Ticket
+const automaticTransferTicket = async (msg: WbotMessage, ticket: Ticket) => {
+  const arrStrings = msg.body.split(" ");
+  const promises = arrStrings.map(str =>
+    User.findOne({
+      where: { ramal: { [Op.like]: `${str}` } },
+      attributes: ["id", "name"]
+    })
+  );
 
-//   const results = await Promise.all(promises);
-//   const result = JSON.parse(JSON.stringify(results));
-//   const respon = result.filter((ele: any) => ele !== null);
+  const results = await Promise.all(promises);
+  const result = JSON.parse(JSON.stringify(results));
+  const respon = result.filter((ele: any) => ele !== null);
 
-//   if (respon[0]) {
-//     const userId = respon[0].id;
-//     const status = "pending";
-//     await Ticket.update({ userId, status }, { where: { id: ticket.id } });
-//   }
-// };
+  if (respon[0]) {
+    const userId = respon[0].id;
+    const status = "pending";
+    await Ticket.update({ userId, status }, { where: { id: ticket.id } });
+  }
+};
+// Fim do codigo Automatic Transfer Ticket
 
 const verifyMessage = async (
   msg: WbotMessage,
@@ -167,7 +171,29 @@ const verifyMessage = async (
   if (msg.type === "location") msg = prepareLocation(msg);
   const quotedMsg = await verifyQuotedMessage(msg);
 
-  // await automaticTransferTicket(msg, ticket);
+  // Inicio do codigo Automatic Transfer Ticket
+  const ramalArr: any = [];
+  const ramalFunction = async () => {
+    console.log(ticket.contact.name);
+    const users = await User.findAll({ attributes: ["ramal", "name"] });
+    const usersRamal = JSON.parse(JSON.stringify(users));
+    const ramals = usersRamal.map((ele: any) => ele.ramal);
+
+    for (const element of ramals) {
+      if (msg.body.includes(element)) {
+        const a = usersRamal.filter((ele: any) => ele.ramal === element);
+
+        const bodyMsg = {
+          body: `Sua conversa foi transferida para o ramal ${a[0].ramal} , e você está conversando com o (a) ${ticket.contact.name}`
+        };
+        ramalArr.push(bodyMsg.body);
+      }
+    }
+  };
+
+  await automaticTransferTicket(msg, ticket);
+  await ramalFunction();
+  // Fim do codigo Automatic Transfer Ticket
 
   const a = JSON.parse(JSON.stringify(msg));
 
@@ -221,17 +247,17 @@ const verifyMessage = async (
     ticketId: ticket.id,
     contactId: msg.fromMe ? undefined : contact.id,
     body:
-      arrquotedMsg.length > 0
+      ramalArr.length > 0
+        ? ramalArr[0]
+        : arrquotedMsg.length > 0
         ? arrquotedMsg[0]
         : msg.body
         ? msg.body
         : `${img[0]}
-    Produto(s) do catálogo:
-
-      ${resultProduct[0].toString()}
-
-      QUANTIDADE TOTAL DE PRODUTOS: ${a._data.itemCount}
-      VALOR TOTAL DO PEDIDO: R$ ${resultPriceTotal[0].toFixed(2)}`,
+          Produto(s) do catálogo:
+          ${resultProduct[0].toString()}
+          QUANTIDADE TOTAL DE PRODUTOS: ${a._data.itemCount}
+          VALOR TOTAL DO PEDIDO: R$ ${resultPriceTotal[0].toFixed(2)}`,
     fromMe: msg.fromMe,
     mediaType: msg.type,
     read: msg.fromMe,

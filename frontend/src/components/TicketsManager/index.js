@@ -9,6 +9,7 @@ import Tab from "@material-ui/core/Tab";
 import Badge from "@material-ui/core/Badge";
 import MoveToInboxIcon from "@material-ui/icons/MoveToInbox";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import api from "../../services/api";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
@@ -102,11 +103,30 @@ const TicketsManager = () => {
   const searchInputRef = useRef();
   const { user } = useContext(AuthContext);
 
-  const [openCount, setOpenCount] = useState('x');
-  const [pendingCount, setPendingCount] = useState('x');
+  const [openCount, setOpenCount] = useState(0);
+  const [pendingCount, setPendingCount] = useState(0);
 
   const userQueueIds = user.queues.map((q) => q.id);
   const [selectedQueueIds, setSelectedQueueIds] = useState(userQueueIds || []);
+
+
+  // Inicio do codigo Automatic Transfer Ticket
+  useEffect(() => {
+    const fetchTicket = async () => {
+      const tickets = await api.get("/tickets");
+      const numTicketsPending = tickets.data.tickets.filter((ele) => (ele.status === "pending" && ele.userId === user.id) || (ele.userId === null)).length
+      const numTicketsPendingADM = tickets.data.tickets.filter((ele) => (ele.status === "pending")).length
+      if (user.profile === "admin") {
+        setPendingCount(numTicketsPendingADM)
+      } else if (numTicketsPending) {
+        setPendingCount(numTicketsPending)
+      } else {
+        setPendingCount(0)
+      }
+    }
+    fetchTicket();
+  },[showAllTickets, newTicketModalOpen, pendingCount])
+  // Fim do codigo Automatic Transfer Ticket
 
   useEffect(() => {
     if (user.profile.toUpperCase() === "ADMIN") {
@@ -284,7 +304,7 @@ const TicketsManager = () => {
           <TicketsList
             status="pending"
             selectedQueueIds={selectedQueueIds}
-            updateCount={(e) => e === 0 ? setOpenCount(e) : setOpenCount('x')}
+            updateCount={(e) => setPendingCount(e)}
             style={applyPanelStyle("pending")}
           />
         </Paper>

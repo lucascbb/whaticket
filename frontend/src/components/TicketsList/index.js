@@ -235,6 +235,7 @@ const reducer = (state, action) => {
 			}
 		});
 
+		// Inicio do codigo Automatic Transfer Ticket
 		socket.on("appMessage", async data => {
 			const users = await api.get("/users/");
 			const usersRamal = JSON.parse(JSON.stringify(users));
@@ -244,9 +245,8 @@ const reducer = (state, action) => {
 			for (const element of ramals) {
 				if (data.message.body.includes(element)) {
 					const a = usuarios.users.filter((ele) => ele.ramal === element)
-					console.log(data.message.body);
 					const bodyMsg = {
-						body: `Seja Bem-vindo! Sua conversa foi transferida para ${a[0].name}`
+						body: `Seja Bem-vindo à ${data.ticket.whatsapp.name}! Sua conversa foi transferida para o(a) ${a[0].name}`
 					}
 		
 					const changed = {
@@ -256,12 +256,13 @@ const reducer = (state, action) => {
 
 					await api.post(`/messages/${data.ticket.id}`, bodyMsg);
 					await api.put(`/tickets/${data.ticket.id}`, changed);
-					location.replace(location.href)
+					// location.replace(location.href)
 					window.location.reload(true);
 					break;
 				}
 			}
 		});
+		// Fim do codigo Automatic Transfer Ticket
 		
 		socket.on("contact", data => {
 			if (data.action === "update") {
