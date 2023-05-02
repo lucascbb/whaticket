@@ -141,7 +141,7 @@ const verifyMediaMessage = async (
   return newMessage;
 };
 
-// Inicio do codigo Automatic Transfer Ticket
+// Inicio do codigo Automatic Transfer Ticket 2.0
 const automaticTransferTicket = async (msg: WbotMessage, ticket: Ticket) => {
   const arrStrings = msg.body.split(" ");
   const promises = arrStrings.map(str =>
@@ -161,7 +161,7 @@ const automaticTransferTicket = async (msg: WbotMessage, ticket: Ticket) => {
     await Ticket.update({ userId, status }, { where: { id: ticket.id } });
   }
 };
-// Fim do codigo Automatic Transfer Ticket
+// Fim do codigo Automatic Transfer Ticket 2.0
 
 const verifyMessage = async (
   msg: WbotMessage,
@@ -171,7 +171,7 @@ const verifyMessage = async (
   if (msg.type === "location") msg = prepareLocation(msg);
   const quotedMsg = await verifyQuotedMessage(msg);
 
-  // Inicio do codigo Automatic Transfer Ticket
+  // Inicio do codigo Automatic Transfer Ticket 2.0
   const ramalArr: any = [];
   const ramalFunction = async () => {
     console.log(ticket.contact.name);
@@ -193,7 +193,7 @@ const verifyMessage = async (
 
   await automaticTransferTicket(msg, ticket);
   await ramalFunction();
-  // Fim do codigo Automatic Transfer Ticket
+  // Fim do codigo Automatic Transfer Ticket 2.0
 
   const a = JSON.parse(JSON.stringify(msg));
 

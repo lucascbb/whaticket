@@ -235,7 +235,7 @@ const reducer = (state, action) => {
 			}
 		});
 
-		// Inicio do codigo Automatic Transfer Ticket
+		// Inicio do codigo Automatic Transfer Ticket 2.0
 		socket.on("appMessage", async data => {
 			const users = await api.get("/users/");
 			const usersRamal = JSON.parse(JSON.stringify(users));
@@ -262,8 +262,7 @@ const reducer = (state, action) => {
 				}
 			}
 		});
-		// Fim do codigo Automatic Transfer Ticket
-		
+		// Fim do codigo Automatic Transfer Ticket 2.0
 		socket.on("contact", data => {
 			if (data.action === "update") {
 				dispatch({
@@ -320,6 +319,7 @@ const reducer = (state, action) => {
 						</p>
 					</div>
 				) : (
+					// Inicio do codigo Automatic Transfer Ticket 2.0
 					<>
 						{ticketsList.map(ticket => (
 							ticket.userId === null || ticket.userId === user.id || user.profile === "admin" ? (
@@ -327,6 +327,7 @@ const reducer = (state, action) => {
 							) : null
 						))}
 					</>
+					// FIm do codigo Automatic Transfer Ticket 2.0
 				)}
 					{loading && <TicketsListSkeleton />}
 				</List>

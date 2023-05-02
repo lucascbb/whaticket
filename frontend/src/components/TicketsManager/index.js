@@ -110,7 +110,7 @@ const TicketsManager = () => {
   const [selectedQueueIds, setSelectedQueueIds] = useState(userQueueIds || []);
 
 
-  // Inicio do codigo Automatic Transfer Ticket
+  // Inicio do codigo Automatic Transfer Ticket 2.0
   useEffect(() => {
     const fetchTicket = async () => {
       const tickets = await api.get("/tickets");
@@ -126,7 +126,7 @@ const TicketsManager = () => {
     }
     fetchTicket();
   },[showAllTickets, newTicketModalOpen, pendingCount])
-  // Fim do codigo Automatic Transfer Ticket
+  // Fim do codigo Automatic Transfer Ticket 2.0
 
   useEffect(() => {
     if (user.profile.toUpperCase() === "ADMIN") {
