@@ -218,7 +218,7 @@ const MessageInput = ({ ticketStatus }) => {
     useContext(ReplyMessageContext);
   const { user } = useContext(AuthContext);
 
-  const [signMessage, setSignMessage] = useLocalStorage("signOption", true);
+  const [signMessage, setSignMessage] = useLocalStorage("signOption", false);
 
   useEffect(() => {
     inputRef.current.focus();
@@ -499,9 +499,10 @@ const MessageInput = ({ ticketStatus }) => {
                 <Switch
                   size="small"
                   checked={signMessage}
-                  onChange={(e) => {
-                    setSignMessage(e.target.checked);
-                  }}
+                  // Switch desativado
+                  // onChange={(e) => {
+                  //   setSignMessage(e.target.checked);
+                  // }}
                   name="showAllTickets"
                   color="primary"
                 />
@@ -561,9 +562,10 @@ const MessageInput = ({ ticketStatus }) => {
                     <Switch
                       size="small"
                       checked={signMessage}
-                      onChange={(e) => {
-                        setSignMessage(e.target.checked);
-                      }}
+                      // Switch desativado
+                      // onChange={(e) => {
+                      //   setSignMessage(e.target.checked);
+                      // }}
                       name="showAllTickets"
                       color="primary"
                     />
